@@ -1,7 +1,8 @@
 import type { userModel } from "../../../app/models/userModel.app";
 import UserRepositories from "./user.repositorie";
 import bcrypt from "bcrypt";
-import { sign } from "jsonwebtoken";
+import { Jwt } from "hono/utils/jwt";
+import Config from "../../../app/config/config.app";
 
 export default class UserServices {
 	private userRepositories: UserRepositories;
@@ -32,14 +33,13 @@ export default class UserServices {
 
 	async loginUser(userId: number, password: string) {
 		const user = await this.userRepositories.findUserByUserId(userId);
-		if (!user) throw new Error("Not found");
-
-		if (!user.password) throw new Error("Password is not set");
+		if (!user) throw new Error("User not found");
 
 		const isPasswordValid = await bcrypt.compare(password, user.password);
-		if (!isPasswordValid) throw new Error("Invalid");
+		if (!isPasswordValid) throw new Error("Invalid password");
 
-		const token = sign({ userId: user.userId }, "secretKey", { expiresIn: "1h",});
+		const token = await Jwt.sign({ userId: user.userId }, Config.secretPayload);
+
 		return { token, user };
 	}
 }
