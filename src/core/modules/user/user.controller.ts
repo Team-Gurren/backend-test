@@ -63,7 +63,7 @@ export default class UserController {
 			return c.json({ token, user }, 200);
 		} catch (error) {
 			console.log(error);
-			return c.json({ message: "loginUser", error: error }, 401);
+			return c.json({ message: "loginUser", error: error }, 500);
 		}
 	}
 	async getUserInformation(c: Context) {
@@ -84,10 +84,7 @@ export default class UserController {
 
 			return c.json({ message: "Authenticated", payload, user, qrCode }, 200);
 		} catch (error) {
-			return c.json(
-				{ message: "Error fetching user information", error: error },
-				500,
-			);
+			return c.json({ message: "getUserInformation", error: error } ,500);
 		}
 	}
 }
