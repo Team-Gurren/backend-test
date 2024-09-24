@@ -15,6 +15,10 @@ export default class UserServices {
 		return await this.userRepositories.findUserById(id);
 	}
 
+	async getUserByUserId(userId: number) {
+		return await this.userRepositories.findUserByUserId(userId);
+	}
+
 	async createUser(userData: Partial<userModel>) {
 		if (!userData.password) throw new Error("Password is required");
 		const hashedPassword = await bcrypt.hash(userData.password, 2);
