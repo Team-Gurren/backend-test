@@ -75,7 +75,6 @@ export default class UserController {
 			if (!user) return c.json({ message: "Not found" }, 404);
 
 			const qrData = {
-				id: user.id,
 				userId: user.userId,
 				name: user.name,
 				class: user.class,
