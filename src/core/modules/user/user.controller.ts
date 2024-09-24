@@ -1,8 +1,6 @@
 import type { Context } from "hono";
 import UserServices from "./user.services";
-import { jwt } from "hono/jwt";
-import Config from "../../../app/config/config.app";
-const secret = Config.secretPayload;
+import QRCode  from "qrcode";
 
 export default class UserController {
 	private userServices: UserServices;
@@ -70,32 +68,25 @@ export default class UserController {
 	}
 	async getUserInformation(c: Context) {
 		const payload = c.get("jwtPayload");
-
-		if (!payload) {
-			return c.json({ message: "Unauthorized" }, 401);
-		}
-
-		console.log("JWT Payload:", payload); // Verifique o conteúdo do payload
+		if (!payload) return c.json({ message: "Unauthorized" }, 401);
 
 		try {
 			const user = await this.userServices.getUserByUserId(payload.userId);
-			if (!user) {
-				return c.json({ message: "User not found" }, 404);
-			}
-			return c.json(
-				{
-					message: "Authenticated",
-					payload,
-					user,
-				},
-				200,
-			);
+			if (!user) return c.json({ message: "Not found" }, 404);
+
+			const qrData = {
+				id: user.id,
+				userId: user.userId,
+				name: user.name,
+				class: user.class,
+				age: user.age,
+			};
+			const qrCode = await QRCode.toDataURL(JSON.stringify(qrData));
+
+			return c.json({ message: "Authenticated", payload, user, qrCode }, 200);
 		} catch (error) {
 			return c.json(
-				{
-					message: "Error fetching user information",
-					error: error,
-				},
+				{ message: "Error fetching user information", error: error },
 				500,
 			);
 		}
