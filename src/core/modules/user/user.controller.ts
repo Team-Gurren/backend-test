@@ -9,6 +9,15 @@ export default class UserController {
 		this.userServices = new UserServices();
 	}
 
+	async getAllUsers(c: Context) {
+		try {
+			const users = await this.userServices.getAllUsers();
+			return c.json(users, 200);
+		} catch (error) {
+			return c.json({ message: "getAllUsers", error: error }, 500);
+		}
+	}
+
 	async getUserById(c: Context) {
 		const id = c.req.param("id");
 		try {

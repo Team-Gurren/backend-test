@@ -7,6 +7,7 @@ const userController = new UserController();
 const secret = Config.secretPayload;
 
 const userRouter = (app: Hono) => {
+	app.get("/users", (c) => userController.getAllUsers(c));
 	app.get("/user/:id", (c) => userController.getUserById(c));
 	app.post("/user", (c) => userController.createUser(c));
 	app.put("/user/:id", (c) => userController.updateUser(c));

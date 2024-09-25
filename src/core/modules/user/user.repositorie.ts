@@ -4,6 +4,10 @@ import { userModel } from "../../../app/models/userModel.app";
 export default class UserRepositories {
 	private userRepository = AppDataSource.getRepository(userModel);
 
+	async findAllUsers() {
+		return await this.userRepository.find();
+	}
+
 	async findUserById(id: number) {
 		return await this.userRepository.findOneBy({ id });
 	}

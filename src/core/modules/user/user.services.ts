@@ -11,6 +11,10 @@ export default class UserServices {
 		this.userRepositories = new UserRepositories();
 	}
 
+	async getAllUsers() {
+		return await this.userRepositories.findAllUsers();
+	}
+
 	async getUserById(id: number) {
 		return await this.userRepositories.findUserById(id);
 	}
