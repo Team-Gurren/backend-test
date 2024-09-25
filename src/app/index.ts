@@ -12,11 +12,11 @@ export default function handleServer(): void {
 	const port = Config.port;
 	console.log(`Server is running on port ${port}`);
 
-	handleRoutes(app);
-	handleDatabse();
-
 	corsMiddleware(app);
 	preetyJsonMiddleware(app);
+
+	handleRoutes(app);
+	handleDatabse();
 
 	serve({
 		fetch: app.fetch,

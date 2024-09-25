@@ -3,7 +3,7 @@ import { cors } from "hono/cors";
 
 import Config from "../config/config.app";
 
-const corsMiddleware = (app: Hono): void => {
+const corsMiddleware = (app: Hono) => {
 	app.use(
 		"*",
 		cors({
