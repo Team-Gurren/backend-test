@@ -4,8 +4,29 @@ import { userModel } from "../../../app/models/userModel.app";
 export default class UserRepositories {
 	private userRepository = AppDataSource.getRepository(userModel);
 
-	async findAllUsers() {
-		return await this.userRepository.find();
+	async findAllUsers(page: number) {
+		const perPage = 10;
+		const skip = (page - 1) * perPage;
+
+		const [users, total] = await this.userRepository.findAndCount({
+			skip: skip,
+			take: perPage,
+		});
+
+		const lastPage = Math.ceil(total / perPage);
+
+		return {
+			data: users.map((user) => ({
+				userId: user.userId,
+				name: user.name,
+				lastname: user.lastName,
+				age: user.age,
+				class: user.class,
+			})),
+			total: total,
+			page: page,
+			lastPage: lastPage,
+		};
 	}
 
 	async findUserById(id: number) {

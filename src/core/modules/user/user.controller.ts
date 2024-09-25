@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import UserServices from "./user.services";
-import QRCode  from "qrcode";
+import QRCode from "qrcode";
 
 export default class UserController {
 	private userServices: UserServices;
@@ -11,8 +11,14 @@ export default class UserController {
 
 	async getAllUsers(c: Context) {
 		try {
-			const users = await this.userServices.getAllUsers();
-			return c.json(users, 200);
+			const page = Number(c.req.query("page")) || 1;
+			const result = await this.userServices.getAllUsers(page);
+
+			if (page > result.lastPage) {
+				return c.json({ message: "Página inexistente" }, 404);
+			}
+
+			return c.json(result, 200);
 		} catch (error) {
 			return c.json({ message: "getAllUsers", error: error }, 500);
 		}
@@ -93,7 +99,7 @@ export default class UserController {
 
 			return c.json({ message: "Authenticated", payload, user, qrCode }, 200);
 		} catch (error) {
-			return c.json({ message: "getUserInformation", error: error } ,500);
+			return c.json({ message: "getUserInformation", error: error }, 500);
 		}
 	}
 }
