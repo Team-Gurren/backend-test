@@ -2,7 +2,6 @@
 	"name": "back",
 	"scripts": {
 		"dev": "tsx watch --env-file=.env src/server.ts",
-		"test": "jest"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.13.0",
@@ -10,7 +9,6 @@
 		"@types/qrcode": "^1.5.5",
 		"bcrypt": "^5.1.1",
 		"hono": "^4.6.2",
-		"jsonwebtoken": "^9.0.2",
 		"pg": "^8.13.0",
 		"qrcode": "^1.5.4",
 		"reflect-metadata": "^0.2.2",
@@ -18,7 +16,6 @@
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.2",
-		"@types/jsonwebtoken": "^9.0.7",
 		"@types/node": "^20.11.17",
 		"tsx": "^4.7.1"
 	}
