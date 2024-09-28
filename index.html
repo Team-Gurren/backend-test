@@ -19,6 +19,15 @@
             padding: 10px 15px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .success {
+            background-color: green;
+            color: white;
+        }
+        .error {
+            background-color: red;
+            color: white;
         }
     </style>
 </head>
@@ -31,28 +40,40 @@
     <script>
         document.getElementById('submitBtn').addEventListener('click', async () => {
             const userId = document.getElementById('userId').value;
+            const submitBtn = document.getElementById('submitBtn');
+
             if (!userId) {
                 alert("Por favor, escaneie um código de barras.");
                 return;
             }
 
-            try {
-                const response = await fetch('http://localhost:3000/lunch', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: parseInt(userId, 10) })
-                });
+            // Adicionando um delay antes da requisição
+            setTimeout(async () => {
+                try {
+                    const response = await fetch('http://localhost:3000/lunch', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: parseInt(userId, 10) })
+                    });
 
-                const text = await response.text(); 
-                const result = JSON.parse(text); 
+                    const text = await response.text(); 
+                    const result = JSON.parse(text); 
 
-                document.getElementById('responseMessage').innerText = `Resposta: ${JSON.stringify(result)}`;
-                document.getElementById('userId').value = ''; 
-            } catch (error) {
-                document.getElementById('responseMessage').innerText = `Erro: ${error.message}`;
-            }
+                    document.getElementById('responseMessage').innerText = `Resposta: ${JSON.stringify(result)}`;
+                    document.getElementById('userId').value = ''; 
+                    
+                    // Altera a cor do botão para verde em caso de sucesso
+                    submitBtn.classList.add('success');
+                    submitBtn.classList.remove('error');
+                } catch (error) {
+                    document.getElementById('responseMessage').innerText = `Erro: ${error.message}`;
+                    
+                    submitBtn.classList.add('error');
+                    submitBtn.classList.remove('success');
+                }
+            }, 1000); 
         });
 
         document.getElementById('userId').addEventListener('keypress', function(event) {

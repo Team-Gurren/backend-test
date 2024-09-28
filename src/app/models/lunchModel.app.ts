@@ -8,6 +8,9 @@ export class LunchModel {
 	@Column("varchar")
 	name!: string;
 
+	@Column("date")
+	date!: Date;
+
 	@Column("json")
 	reps!: { id: number; reps: number }[];
 }

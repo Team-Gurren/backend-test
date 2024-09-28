@@ -7,19 +7,31 @@ export default class LunchController {
 	async createLunch(c: Context) {
 		const lunchData = await c.req.json();
 		const userId = lunchData.id;
+		const now = new Date();
+		const dateNow = now.toISOString().split("T")[0];
+
 		try {
 			const lunches = await this.lunchService.getAllLunches();
-			let lunch = lunches[0];
+			console.log(dateNow);
 
-			if (!lunch) {
+			const existingLunchToday = lunches.find((lunch) => {
+				const lunchDate = new Date(lunch.date);
+				return lunchDate.toISOString().split("T")[0] === dateNow;
+			});
+
+			// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
+			let lunch;
+
+			if (!existingLunchToday) {
 				lunch = await this.lunchService.createLunch({
 					name: "Lunch Name",
+					date: now,
 					reps: [{ id: userId, reps: 1 }],
 				});
 			} else {
-				const existingRep = lunch.reps.find(
-					(rep: { id: number }) => rep.id === userId,
-				);
+				lunch = existingLunchToday;
+				const existingRep = lunch.reps.find((rep) => rep.id === userId);
+
 				if (existingRep) {
 					existingRep.reps += 1;
 				} else {
