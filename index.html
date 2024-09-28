@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Almoço</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registrar Almoço</h1>
+    <input type="text" id="userId" placeholder="Escaneie o código de barras aqui" autofocus>
+    <button id="submitBtn">Registrar</button>
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', async () => {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                alert("Por favor, escaneie um código de barras.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/lunch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: parseInt(userId, 10) })
+                });
+
+                const text = await response.text(); 
+                const result = JSON.parse(text); 
+
+                document.getElementById('responseMessage').innerText = `Resposta: ${JSON.stringify(result)}`;
+                document.getElementById('userId').value = ''; 
+            } catch (error) {
+                document.getElementById('responseMessage').innerText = `Erro: ${error.message}`;
+            }
+        });
+
+        document.getElementById('userId').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('submitBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>

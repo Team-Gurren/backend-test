@@ -6,11 +6,32 @@ export default class LunchController {
 
 	async createLunch(c: Context) {
 		const lunchData = await c.req.json();
+		const userId = lunchData.id;
 		try {
-			const lunch = await this.lunchService.createLunch(lunchData);
+			const lunches = await this.lunchService.getAllLunches();
+			let lunch = lunches[0];
+
+			if (!lunch) {
+				lunch = await this.lunchService.createLunch({
+					name: "Lunch Name",
+					reps: [{ id: userId, reps: 1 }],
+				});
+			} else {
+				const existingRep = lunch.reps.find(
+					(rep: { id: number }) => rep.id === userId,
+				);
+				if (existingRep) {
+					existingRep.reps += 1;
+				} else {
+					lunch.reps.push({ id: userId, reps: 1 });
+				}
+
+				await this.lunchService.updateLunch(lunch.id, lunch);
+			}
+
 			return c.json(lunch, 201);
 		} catch (error) {
-			return c.json({ message: error }, 500);
+			return c.json({ message: (error as Error).message }, 500);
 		}
 	}
 
@@ -48,16 +69,6 @@ export default class LunchController {
 				return c.json({ message: "Lunch not found" }, 404);
 			}
 			return c.json(updatedLunch);
-		} catch (error) {
-			return c.json({ message: error }, 500);
-		}
-	}
-
-	async deleteLunch(c: Context) {
-		const { id } = c.req.param();
-		try {
-			await this.lunchService.deleteLunch(Number(id));
-			return c.text("deleted", 204);
 		} catch (error) {
 			return c.json({ message: error }, 500);
 		}

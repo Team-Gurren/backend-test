@@ -24,8 +24,4 @@ export default class LunchRepositories {
 		await this.lunchRepository.update(id, lunchData);
 		return this.getLunchById(id);
 	}
-
-	async deleteLunch(id: number): Promise<void> {
-		await this.lunchRepository.delete(id);
-	}
 }

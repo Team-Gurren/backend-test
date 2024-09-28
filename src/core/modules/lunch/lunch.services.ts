@@ -22,8 +22,4 @@ export default class LunchService {
 	): Promise<LunchModel | null> {
 		return await this.lunchRepository.updateLunch(id, lunchData);
 	}
-
-	async deleteLunch(id: number): Promise<void> {
-		await this.lunchRepository.deleteLunch(id);
-	}
 }
