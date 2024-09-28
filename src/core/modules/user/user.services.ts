@@ -1,8 +1,7 @@
 import type { userModel } from "../../../app/models/userModel.app";
 import UserRepositories from "./user.repositorie";
 import bcrypt from "bcrypt";
-import { Jwt } from "hono/utils/jwt";
-import Config from "../../../app/config/config.app";
+import authGuard from "../../middlewares/auth.guard";
 
 export default class UserServices {
 	private userRepositories: UserRepositories;
@@ -46,7 +45,7 @@ export default class UserServices {
 		const isPasswordValid = await bcrypt.compare(password, user.password);
 		if (!isPasswordValid) throw new Error("Invalid password");
 
-		const token = await Jwt.sign({ userId: user.userId }, Config.secretPayload);
+		const token = await authGuard(user.userId);
 
 		return { token, user };
 	}

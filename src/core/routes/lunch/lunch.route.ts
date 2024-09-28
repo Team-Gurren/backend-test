@@ -1,13 +1,14 @@
 import type { Hono } from "hono";
+import LunchController from "../../modules/lunch/lunch.controller";
 
 const lunchRouter = (app: Hono) => {
-	app.get("/lunch", async (c) => {
-		return c.json({
-			lunch: "lunch",
-			lunch2: "lunch2",
-			lunch3: "lunch3",
-		});
-	});
+    const lunch = new LunchController();
+
+    app.post('/lunch', lunch.createLunch.bind(lunch));
+    app.get('/lunch', lunch.getAllLunches.bind(lunch));
+    app.get('/lunch/:id', lunch.getLunchById.bind(lunch));
+    app.put('/lunch/:id', lunch.updateLunch.bind(lunch));
+    app.delete('/lunch/:id', lunch.deleteLunch.bind(lunch));
 };
 
 export default lunchRouter;
