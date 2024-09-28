@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import UserServices from "./user.services";
 import QRCode from "qrcode";
+import BwipJs from "bwip-js/node";
 
 export default class UserController {
 	private userServices: UserServices;
@@ -82,24 +83,35 @@ export default class UserController {
 		}
 	}
 	async getUserInformation(c: Context) {
-		const payload = c.get("jwtPayload");
-		if (!payload) return c.json({ message: "Unauthorized" }, 401);
-
-		try {
-			const user = await this.userServices.getUserByUserId(payload.userId);
-			if (!user) return c.json({ message: "Not found" }, 404);
-
-			const qrData = {
-				userId: user.userId,
-				name: user.name,
-				class: user.class,
-				age: user.age,
-			};
-			const qrCode = await QRCode.toDataURL(JSON.stringify(qrData));
-
-			return c.json({ message: "Authenticated", payload, user, qrCode }, 200);
-		} catch (error) {
-			return c.json({ message: "getUserInformation", error: error }, 500);
-		}
-	}
+        const payload = c.get("jwtPayload");
+        if (!payload) return c.json({ message: "Unauthorized" }, 401);
+    
+        try {
+            const user = await this.userServices.getUserByUserId(payload.userId);
+            if (!user) return c.json({ message: "Not found" }, 404);
+    
+            const barcodeData = `${user.userId}|${user.name}|${user.class}|${user.age}`;
+    
+            const barcode = await new Promise<string>((resolve, reject) => {
+                BwipJs.toBuffer({
+                    bcid: 'code128',
+                    text: barcodeData,
+                    scale: 3,
+                    height: 10,
+                    includetext: true,
+                }, (err: string | Error, buffer: Buffer) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(`data:image/png;base64,${buffer.toString('base64')}`);
+                    }
+                });
+            });
+    
+            return c.json({ message: "Authenticated", payload, user, barcode }, 200);
+        } catch (error: unknown) {
+            return c.json({ message: "getUserInformation", error: error instanceof Error ? error.message : "Unknown error" }, 500);
+        }
+    }
+	
 }
