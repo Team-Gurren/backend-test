@@ -3,7 +3,6 @@ import UserController from "../../modules/user/user.controller";
 import { jwt } from "hono/jwt";
 import Config from "../../../app/config/config.app";
 
-
 const userController = new UserController();
 const secret = Config.secretPayload;
 
