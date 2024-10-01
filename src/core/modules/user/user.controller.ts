@@ -72,11 +72,11 @@ export default class UserController {
 	async loginUser(c: Context) {
 		try {
 			const { userId, password } = await c.req.json();
-			const { token, user } = await this.userServices.loginUser(
+			const { token } = await this.userServices.loginUser(
 				Number(userId),
 				password,
 			);
-			return c.json({ token, user }, 200);
+			return c.json({ token }, 200);
 		} catch (error) {
 			console.log(error);
 			return c.json({ message: "loginUser", error: error }, 500);
