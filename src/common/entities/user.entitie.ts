@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { AlmocoRepeticaoEntity } from "./almoco.entitie";
 
 @Entity()
-export class UserEntitie {
+export class UserEntity {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -22,4 +23,7 @@ export class UserEntitie {
 
 	@Column("varchar")
 	class!: string;
+
+	@OneToMany(() => AlmocoRepeticaoEntity, repeticao => repeticao.user)
+	repeticoes!: AlmocoRepeticaoEntity[];
 }

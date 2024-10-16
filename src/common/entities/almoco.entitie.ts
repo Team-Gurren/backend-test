@@ -1,13 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { UserEntity } from "./user.entitie";
 
 @Entity()
-export class AlmocoEntitie {
+export class AlmocoRepeticaoEntity {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
-	@Column("varchar")
-	name!: string;
+	@ManyToOne(() => UserEntity, user => user.repeticoes)
+	user!: UserEntity;
+
+	@Column("int")
+	almocoId!: number;
+
+	@Column("date")
+	data!: Date;
 
 	@Column("json")
-	reps!: { id: number; reps: number }[];
+	repeticoes!: { id: number; repeticoes: number }[];
 }
