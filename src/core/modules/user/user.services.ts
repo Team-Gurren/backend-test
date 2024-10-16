@@ -1,8 +1,8 @@
-import type { UserEntity } from "../../../common/entities/user.entitie";
 import UserRepositories from "./user.repositorie";
 import bcrypt from "bcrypt";
 import { Jwt } from "hono/utils/jwt";
 import Config from "../../../app/config/config.app";
+import type { UserEntity } from "../../../common/entities/user.entitie";
 
 export default class UserServices {
 	private userRepositories: UserRepositories;

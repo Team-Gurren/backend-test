@@ -1,9 +1,10 @@
-import type { BaseEntity, Repository } from "typeorm";
+import type { EntityTarget, Repository, ObjectLiteral } from "typeorm";
+import { AppDataSource } from "../handlers/handle.database";
 
-export default abstract class BaseRepository<T extends BaseEntity> {
-	protected readonly repository: Repository<T>;
+export default abstract class BaseRepository<T extends ObjectLiteral> {
+	protected repository: Repository<T>;
 
-	constructor(repository: Repository<T>) {
-		this.repository = repository;
+	constructor(private readonly entity: EntityTarget<T>) {
+		this.repository = AppDataSource.getRepository(this.entity);
 	}
 }

@@ -1,8 +1,13 @@
 import { UserEntity } from "../../../common/entities/user.entitie";
 import { AppDataSource } from "../../../common/handlers/handle.database";
+import BaseRepository from "../../../common/utils/repository.utils";
 
-export default class UserRepositories {
+export default class UserRepositories extends BaseRepository<UserEntity> {
 	private userRepository = AppDataSource.getRepository(UserEntity);
+
+	constructor() {
+		super(UserEntity);
+	}
 
 	async findAllUsers(page: number) {
 		const perPage = 10;
