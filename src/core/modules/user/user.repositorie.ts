@@ -1,8 +1,9 @@
-import { AppDataSource } from "../../../app/database/database.app";
-import { userModel } from "../../../app/models/userModel.app";
+
+import { UserEntitie } from "../../../common/entities/user.entitie";
+import { AppDataSource } from "../../../common/handlers/handle.database";
 
 export default class UserRepositories {
-	private userRepository = AppDataSource.getRepository(userModel);
+	private userRepository = AppDataSource.getRepository(UserEntitie);
 
 	async findAllUsers(page: number) {
 		const perPage = 10;
@@ -37,12 +38,12 @@ export default class UserRepositories {
 		return await this.userRepository.findOneBy({ userId });
 	}
 
-	async createUser(userData: Partial<userModel>) {
+	async createUser(userData: Partial<UserEntitie>) {
 		const user = this.userRepository.create(userData);
 		return await this.userRepository.save(user);
 	}
 
-	async updateUser(id: number, userData: Partial<userModel>) {
+	async updateUser(id: number, userData: Partial<UserEntitie>) {
 		await this.userRepository.update(id, userData);
 		return this.findUserById(id);
 	}

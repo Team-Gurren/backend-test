@@ -1,4 +1,4 @@
-import type { userModel } from "../../../app/models/userModel.app";
+import type { UserEntitie } from "../../../common/entities/user.entitie";
 import UserRepositories from "./user.repositorie";
 import bcrypt from "bcrypt";
 import { Jwt } from "hono/utils/jwt";
@@ -23,7 +23,7 @@ export default class UserServices {
 		return await this.userRepositories.findUserByUserId(userId);
 	}
 
-	async createUser(userData: Partial<userModel>) {
+	async createUser(userData: Partial<UserEntitie>) {
 		if (!userData.password) throw new Error("Password is required");
 		const hashedPassword = await bcrypt.hash(userData.password, 2);
 		userData.password = hashedPassword;
@@ -31,7 +31,7 @@ export default class UserServices {
 		return await this.userRepositories.createUser(userData);
 	}
 
-	async updateUser(id: number, userData: Partial<userModel>) {
+	async updateUser(id: number, userData: Partial<UserEntitie>) {
 		return await this.userRepositories.updateUser(id, userData);
 	}
 

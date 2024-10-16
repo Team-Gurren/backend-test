@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class LunchModel {
+export class AlmocoEntitie {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
