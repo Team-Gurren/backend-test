@@ -1,1 +1,1 @@
-export const Utils = {}
+export const Utils = {};

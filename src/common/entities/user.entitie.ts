@@ -24,6 +24,9 @@ export class UserEntity {
 	@Column("varchar")
 	class!: string;
 
-	@OneToMany(() => AlmocoRepeticaoEntity, repeticao => repeticao.user)
+	@OneToMany(
+		() => AlmocoRepeticaoEntity,
+		(repeticao) => repeticao.user,
+	)
 	repeticoes!: AlmocoRepeticaoEntity[];
 }

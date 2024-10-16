@@ -81,6 +81,7 @@ export default class UserController {
 			return c.json({ message: "loginUser", error: error }, 500);
 		}
 	}
+
 	async getUserInformation(c: Context) {
 		const payload = c.get("jwtPayload");
 		if (!payload) return c.json({ message: "Unauthorized" }, 401);

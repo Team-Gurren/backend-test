@@ -6,7 +6,10 @@ export class AlmocoRepeticaoEntity {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
-	@ManyToOne(() => UserEntity, user => user.repeticoes)
+	@ManyToOne(
+		() => UserEntity,
+		(user) => user.repeticoes,
+	)
 	user!: UserEntity;
 
 	@Column("int")

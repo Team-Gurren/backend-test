@@ -1,4 +1,3 @@
-
 import { UserEntity } from "../../../common/entities/user.entitie";
 import { AppDataSource } from "../../../common/handlers/handle.database";
 

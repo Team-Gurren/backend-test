@@ -9,10 +9,9 @@ export const app = new Hono();
 const port = Config.port;
 
 export default function handleServer(): void {
-
-	AppMiddleware(app)
-	HandleRoutes(app)
-	HandleDatabase()
+	AppMiddleware(app);
+	HandleRoutes(app);
+	HandleDatabase();
 
 	serve({
 		fetch: app.fetch,

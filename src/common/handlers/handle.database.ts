@@ -11,9 +11,11 @@ export const AppDataSource = new DataSource({
 });
 
 export const HandleDatabase = () => {
-	AppDataSource.initialize().then(() => {
-		console.log("Database connected");
-	}).catch((error) => {
-		console.log(error);
-	});
+	AppDataSource.initialize()
+		.then(() => {
+			console.log("Database connected");
+		})
+		.catch((error) => {
+			console.log(error);
+		});
 };
