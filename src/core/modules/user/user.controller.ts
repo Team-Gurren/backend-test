@@ -26,7 +26,6 @@ export default class UserController {
 	public async UpdateUser(c: Context): Promise<Response> {
 		const data = Number(c.req.query("matricula"));
 		const body = await c.req.json();
-		console.log("Atualizando usuário com ID:", data, "com dados:", body); // Log adicional
 		const user = await UpdateUser(data, body);
 		return c.json({ user });
 	}

@@ -3,6 +3,7 @@ const Config = {
 	secretPayload: "kamina",
 	defaultUrls: {
 		user: "/user",
+		auth: "/auth",
 	},
 };
 
