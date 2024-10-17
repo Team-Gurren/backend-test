@@ -1,58 +1,42 @@
 import { UserEntity } from "../../../common/entities/user.entitie";
-import { AppDataSource } from "../../../common/handlers/handle.database";
 import BaseRepository from "../../../common/utils/repository.utils";
 
-export default class UserRepositories extends BaseRepository<UserEntity> {
-	private userRepository = AppDataSource.getRepository(UserEntity);
+import type { UserUpdateDTO } from "./dto/update.user-dto";
+import type { UserDTO } from "./dto/user-dto";
 
+export default class UserRepositories extends BaseRepository<UserEntity> {
 	constructor() {
 		super(UserEntity);
 	}
 
-	async findAllUsers(page: number) {
-		const perPage = 10;
-		const skip = (page - 1) * perPage;
-
-		const [users, total] = await this.userRepository.findAndCount({
-			skip: skip,
-			take: perPage,
-		});
-
-		const lastPage = Math.ceil(total / perPage);
-
-		return {
-			data: users.map((user) => ({
-				userId: user.userId,
-				name: user.name,
-				lastname: user.lastName,
-				age: user.age,
-				class: user.class,
-			})),
-			total: total,
-			page: page,
-			lastPage: lastPage,
-		};
+	async FindUser(data: number): Promise<UserEntity | null> {
+		return await this.repository.findOneBy({ id: data });
 	}
 
-	async findUserById(id: number) {
-		return await this.userRepository.findOneBy({ id });
+	async FindUserByMatricula(data: number): Promise<UserEntity | null> {
+		return await this.repository.findOneBy({ userId: data });
 	}
 
-	async findUserByUserId(userId: number) {
-		return await this.userRepository.findOneBy({ userId });
+	async FindUserByCpf(data: string): Promise<UserEntity | null> {
+		return await this.repository.findOneBy({ cpf: data });
 	}
 
-	async createUser(userData: Partial<UserEntity>) {
-		const user = this.userRepository.create(userData);
-		return await this.userRepository.save(user);
+	async UserCreate(data: UserDTO): Promise<UserEntity> {
+		const user = this.repository.create(data);
+		return await this.repository.save(user);
 	}
 
-	async updateUser(id: number, userData: Partial<UserEntity>) {
-		await this.userRepository.update(id, userData);
-		return this.findUserById(id);
+	async DeleteUser(data: number) {
+		return await this.repository.delete(data);
 	}
 
-	async deleteUser(id: number) {
-		return await this.userRepository.delete(id);
+	async UpdateUser(data: number, body: Partial<UserUpdateDTO>): Promise<UserEntity | null> {
+		const user = await this.FindUserByMatricula(data);
+		if (!user) throw new Error("User not found"); 
+	
+		Object.assign(user, body); 
+	
+		return await this.repository.save(user); 
 	}
+	
 }

@@ -1,53 +1,38 @@
-import UserRepositories from "./user.repositorie";
-import bcrypt from "bcrypt";
-import { Jwt } from "hono/utils/jwt";
-import Config from "../../../app/config/config.app";
 import type { UserEntity } from "../../../common/entities/user.entitie";
+import UserRepositories from "./user.repositorie";
+
+import type { UserUpdateDTO } from "./dto/update.user-dto";
+import type { UserDTO } from "./dto/user-dto";
 
 export default class UserServices {
-	private userRepositories: UserRepositories;
+	private UserRepositories: UserRepositories;
 
 	constructor() {
-		this.userRepositories = new UserRepositories();
+		this.UserRepositories = new UserRepositories();
 	}
 
-	async getAllUsers(page: number) {
-		return await this.userRepositories.findAllUsers(page);
+	async UserFind(data: number): Promise<UserEntity | null> {
+		return await this.UserRepositories.FindUser(data);
 	}
 
-	async getUserById(id: number) {
-		return await this.userRepositories.findUserById(id);
+	async UserFindByMatricula(data: number): Promise<UserEntity | null> {
+		return await this.UserRepositories.FindUserByMatricula(data);
 	}
 
-	async getUserByUserId(userId: number) {
-		return await this.userRepositories.findUserByUserId(userId);
+	async UserFindByCPF(data: string): Promise<UserEntity | null> {
+		return await this.UserRepositories.FindUserByCpf(data);
 	}
 
-	async createUser(userData: Partial<UserEntity>) {
-		if (!userData.password) throw new Error("Password is required");
-		const hashedPassword = await bcrypt.hash(userData.password, 2);
-		userData.password = hashedPassword;
-
-		return await this.userRepositories.createUser(userData);
+	async UserCreate(data: UserDTO): Promise<UserEntity> {
+		return await this.UserRepositories.UserCreate(data);
 	}
 
-	async updateUser(id: number, userData: Partial<UserEntity>) {
-		return await this.userRepositories.updateUser(id, userData);
+	async UserDelete(data: number): Promise<string> {
+		await this.UserRepositories.DeleteUser(data);
+		return "User deleted";
 	}
 
-	async deleteUser(id: number) {
-		return await this.userRepositories.deleteUser(id);
-	}
-
-	async loginUser(userId: number, password: string) {
-		const user = await this.userRepositories.findUserByUserId(userId);
-		if (!user) throw new Error("User not found");
-
-		const isPasswordValid = await bcrypt.compare(password, user.password);
-		if (!isPasswordValid) throw new Error("Invalid password");
-
-		const token = await Jwt.sign({ userId: user.userId }, Config.secretPayload);
-
-		return { token, user };
+	async UserUpdate(data: number, body: Partial<UserUpdateDTO>) {
+		return await this.UserRepositories.UpdateUser(data, body);
 	}
 }
