@@ -15,5 +15,6 @@ const AdminRouter = (app: Hono) => {
 		});
 	});
 	app.get(`${DefaultUrl}/control`, Controller.ControlAdminSelling.bind(Controller))
+	app.get(`${DefaultUrl}/selling`, Controller.IsSelling.bind(Controller))
 };
 export default AdminRouter;
