@@ -11,6 +11,5 @@ const UserRouter = (app: Hono) => {
 	app.delete(`${DefaultUrl}`, Controller.DeleteUser.bind(Controller));
 	app.get(`${DefaultUrl}`, Controller.FindUser.bind(Controller));
 	app.patch(`${DefaultUrl}`, Controller.UpdateUser.bind(Controller));
-
 };
 export default UserRouter;

@@ -6,4 +6,8 @@ export default class AdminServices {
 	constructor() {
 		this.adminRepositories = new AdminRepositories();
 	}
+
+	async SellingControll(control: boolean) {
+		await this.adminRepositories.ControlSelling(control);
+	}
 }
