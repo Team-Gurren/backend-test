@@ -4,6 +4,7 @@ const Config = {
 	defaultUrls: {
 		user: "/user",
 		auth: "/auth",
+		admin: "/admin",
 	},
 };
 

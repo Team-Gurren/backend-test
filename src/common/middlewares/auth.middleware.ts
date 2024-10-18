@@ -1,6 +1,7 @@
 import type { Context, Hono } from "hono";
 import { decode, sign, verify } from "hono/jwt";
 import Config from "../../app/config/config.app";
+import { basicAuth } from "hono/basic-auth";
 
 interface JwtPayload {
 	sub: number;
@@ -42,4 +43,14 @@ export const AuthMiddleware = (app: Hono) => {
 		}
 		await next();
 	});
+};
+
+export const AuthAdminMiddleware = (app: Hono) => {
+	return app.use(
+		basicAuth({
+			verifyUser: (username, password, c) => {
+				return username === "admin" && password === "admin";
+			},
+		}),
+	);
 };
