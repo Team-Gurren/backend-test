@@ -7,6 +7,7 @@ const DefaultUrl = Config.defaultUrls.auth;
 const AuthRouter = (app: Hono) => {
 	const Controller = new AuthController();
 
-	app.post(`${DefaultUrl}`, Controller.LoginUser.bind(Controller));
+	app.post(`${DefaultUrl}`, Controller.LoginUserWithMatricula.bind(Controller));
+	app.post(`${DefaultUrl}/cpf`, Controller.LoginUserWithCPF.bind(Controller));
 };
 export default AuthRouter;
