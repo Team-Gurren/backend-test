@@ -1,5 +1,8 @@
 import type { Context } from "hono";
-import { LoginUserWithCPF, LoginUserWithMatricula } from "./use-cases/login.auth";
+import {
+	LoginUserWithCPF,
+	LoginUserWithMatricula,
+} from "./use-cases/login.auth";
 
 export default class AuthController {
 	public async LoginUserWithMatricula(c: Context): Promise<Response> {

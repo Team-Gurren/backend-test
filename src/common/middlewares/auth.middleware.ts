@@ -8,19 +8,25 @@ interface JwtPayload {
 }
 
 export const AssignJwt = (data: number) => {
-	const payload = {
-		sub: data,
-		iat: Date.now(),
-		exp: Date.now() + 60 * 60 * 1000,
-	};
+    const payload = {
+        sub: data,
+        iat: Math.floor(Date.now() / 1000), 
+        exp: Math.floor(Date.now() / 1000) + 60 * 60, 
+    };
 
-	const secret = Config.secretPayload;
-	return sign(payload, secret, "HS512");
+    const secret = Config.secretPayload;
+    return sign(payload, secret, "HS512");
 };
 
+
 export const VerifyJwt = async (token: string) => {
-	const decoded = await verify(token, Config.secretPayload, "HS512");
-	return decoded;
+	try {
+		const decoded = await verify(token, Config.secretPayload, "HS512");
+		return decoded;
+	} catch (error) {
+		console.error("JWT Verification Error:", error);
+		throw new Error("Invalid token");
+	}
 };
 
 export const DecodeJwt = async (token: string) => {
@@ -29,7 +35,7 @@ export const DecodeJwt = async (token: string) => {
 };
 
 export const AuthMiddleware = (app: Hono) => {
-	app.use(async (c: Context, next) => {
+	return async (c: Context, next: () => Promise<void>) => {
 		const token = c.req.header("Authorization")?.replace("Bearer ", "");
 		if (token) {
 			try {
@@ -42,9 +48,8 @@ export const AuthMiddleware = (app: Hono) => {
 			return c.json({ message: "Authorization token not provided" }, 401);
 		}
 		await next();
-	});
+	};
 };
-
 export const AuthAdminMiddleware = (app: Hono) => {
 	return app.use(
 		basicAuth({
